@@ -372,13 +372,13 @@ This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 p
 
 ## 参考资料
 
-[^1]: Bethel, Z.: A Modern Approach to Software Rasterization. University  $\lceil 1 \rceil$ Workshop, Taylor University, December 14, 2011
-[^2]: TransGaming Inc: Why the Future of 3D Graphics is in Software, White  $\lceil 2 \rceil$ Paper: Swiftshader technology, Jan 29, 2013
+[^1]: Bethel, Z.: A Modern Approach to Software Rasterization. University Workshop, Taylor University, December 14, 2011
+[^2]: TransGaming Inc: Why the Future of 3D Graphics is in Software, White Paper: Swiftshader technology, Jan 29, 2013
 [^3]: Microsoft Corporation: Windows Advanced Rasterization Platform (WARP) guide. 2012
 [^4]: Abrash, M.: Rasterization on larrabee. Dr. Dobbs Portal, 2009
 [^5]: Seiler, L., Carmean, D., Sprangle, E., Forsyth, T., Abrash, M., Dubey, P., Junkins, S., Lake, A., Sugerman, J., Cavin, R., Espasa, R., Grochowski, E., Juan, T., Hanrahan, P.: Larrabee: a Many-Core x86 Architecture for Visual Computing. ACM Transactions on Graphics (TOG) - Proceedings of ACM SIGGRAPH 2008 Volume 27 Issue 3, August 2008
 [^6]: Laine, S., Karras T.: High-Performance Software Rasterization on GPUs. High Performance Graphics, Vancouver, Canada, August 5, 2011
-[^7]: Akenine-möller, T., haines, E.: Real-Time Rendering, A. K. Peters. 3<sup>rd</sup> Edition, 2008
+[^7]: Akenine-möller, T., haines, E.: Real-Time Rendering, A. K. Peters. 3rd Edition, 2008
 [^8]: Sugerman, J., Fatahalian, K., Boulos, S., Akeley, K., and Hanrahan, P.: Gramps: A Programming Model for Graphics Pipelines. ACM Trans. Graph. 28, 4:1–4:11, 2009
 [^9]: Fang, L., Mengcheng H., Xuehui L., Enhua W.: FreePipe: A Programmable, Parallel Rendering Architecture for Efficient Multi-Fragment Effects. In Proceedings of ACM SIGGRAPH Symposium on Interactive 3D Graphics and Games, 2010
 [^10]: Agner, F.: Optimizing Software in C++ An Optimization Guide for Windows, Linux and Mac platforms. Study at Copenhagen University College of Engineering, 2014
@@ -394,4 +394,5 @@ This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 p
 [^20]: Hill, F. S. Jr.: The Pleasures of 'Perp Dot' Products. Chapter II.5 in Graphics Gems IV (Ed. P. S. Heckbert) San Diego: Academic Press, 1994, pp. 138-148
 [^21]: Mileff, P., Dudra, J.: Advanced 2D Rasterization on Modern CPUs, Applied Information Science, Engineering and Technology: Selected Topics from the Field of Production Information Engineering and IT for Manufacturing: Theory and Practice, Series: Topics in Intelligent Engineering and Informatics, Vol. 7, Chapter 5, Springer International publishing, 2014, pp. 63-79
 [^22]: Royer, P., Ituero, P., Lopez-Vallejo, M., Barrio, Carlos A. L.: Implementation Tradeoffs of Triangle Traversal Algorithms for Graphics Processing, Design of Circuits and Integrated Systems (DCIS), Madrid, Spain; November 26-28, 2014
+
 
