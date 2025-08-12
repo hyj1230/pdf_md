@@ -1,4 +1,4 @@
-# **Accelerated Half-Space Triangle Rasterization**
+# **加速半空间三角形光栅化**
 
 ## Péter Mileff, Károly Nehéz, Judit Dudra
 
@@ -8,15 +8,15 @@ University of Miskolc, Department of Information Engineering, Miskolc-Egyetemvá
 
 Bay Zoltán Nonprofit Ltd. for Applied Research, Engineering Division (BAY-ENG), Department of Structural Integrity and Production Technologies, Iglói út 2, 3519 Miskolc, Hungary, judit.dudra@bayzoltan.hu
 
-*Abstract: Since the last decade, graphics processing units (GPU) have dominated the world* of interactive computer graphics and visualization technology. Over the years, sophisticated tools and programming interfaces (like OpenGL, DirectX API) greatly facilitated the work of developers because these frameworks provide all fundamental visualization algorithms. The research target is to develop a traditional CPU-based pure software rasterizer. Although currently it has a lot of drawbacks compared with GPUs, the modern multi-core systems and the diversity of the platforms may require such implementations. In this paper, we are dealing with triangle rasterization, which is the cornerstone of rendering process. New model optimization as well as the improvement and combination of existing techniques have been presented, which dramatically improve performance of the well-known half-space rasterization algorithm. The presented techniques become applicable in areas such as graphics editors and even computer games.
+> *摘要: 在过去的十年间，图形处理器（GPU）已主导了交互式计算机图形和可视化技术领域。多年来，成熟的工具与编程接口（如 OpenGL, DirectX API）极大地便利了开发者工作，因为这些框架提供了所有基础可视化算法。本研究的目标是开发一种基于传统 CPU 的纯软件光栅化渲染器。尽管当前其性能相比 GPU 存在诸多不足，但现代多核系统的普及和平台多样性可能需要此类实现方案。本文聚焦于三角形光栅化这一渲染流程的核心环节，通过建立新型模型优化方案，并结合现有技术的改进与创新，显著提升了经典半空间光栅化算法的性能。所提出的技术方案在图形编辑器乃至计算机游戏等领域均具备应用潜力。*
+> 
+> *关键词: 半空间光栅化; 二分算法; 软件渲染* 
 
-*Keywords: half-space rasterization; bisector algorithm; software rendering* 
+#### 1 **介绍**
 
-#### 1 **Introduction**
+计算机可视化技术的历史可追溯至数十年前，但其重要性在近年尤为凸显。如今，从传统台式计算机到移动及嵌入式设备，先进图形特性几乎无处不在。这一发展成果源于漫长的技术演进，主要动力来自于图形处理器的出现。早期计算机可视化仅依赖低速 CPU 完成整个光栅化流程的所有环节，而当今该任务已由图形加速卡（目标硬件）全面接管。该领域的主要演进方向受到专业计算机游戏、媒体产业以及日益增长的 CAD/CAM 系统需求的共同推动与主导。
 
-The history of computer visualization goes back several decades, but its importance has grown more significantly in recent years. More advanced graphical features are dominant almost everywhere these days, from traditional desktop computers to mobile and embedded devices. This is a result of a long development process, which was mainly induced by the appearance of graphical processors. While in early computer visualization only slow CPUs were used to perform every stage of the entire rasterization process, nowadays graphics cards (target hardware) have taken over this role. The main development directions of the area are inspired and usually controlled by the professional computer game and media industry and the increasing demands for CAD/CAM systems.
-
-However, we should not forget about the recent development of CPUs. Modern CPUs have many advanced features due to multi-core technology and the extended instruction set (e.g. SSE, AVX). Besides the development of the instruction set and the increase of central cores, another important result is the appearance of DDR4 type memories in 2014. Although these types are one order of magnitude faster than older DDR3 RAMs, still cannot compete with the DDR5 type memory equipped in modern video cards. Nevertheless it is a significant step forward to improve the speed of memory operations. The continuous development of CPU technology encourages software developers to reconsider the structure and logical model of their existing graphical applications. The usage of a multi-thread game engine model is essential for today's AAA-type computer games. Developers of the most advanced graphics engines (Unreal Engine, CryEngine, Frostbite, etc.) have already recognized the potential of these new opportunities. The question may arise, whether it makes sense to deal with CPU-based solutions if powerful GPUs are available today. The answer has already been given by leading video game developers. Some modern games apply the CPU to perform specific tasks to reduce GPU load. Software occlusion culling - where the CPU is used to render polygons to occlusion buffer rather than the GPU - is a good example of this hybrid approach. Several well-known games (e.g. KillZone 3, Battlefield 3, etc.) and game engines (e.g. CryEngine) apply similar technologies because CPUs have no latency problem of occlusion queries. Rasterization is usually done in small resolution (e.g. Battlefield uses  $256 \times 114$ ) and occlusion testing can be done using a hierarchical software z-buffer [12] [19].
+However, we should not forget about the recent development of CPUs. Modern CPUs have many advanced features due to multi-core technology and the extended instruction set (e.g. SSE, AVX). Besides the development of the instruction set and the increase of central cores, another important result is the appearance of DDR4 type memories in 2014. Although these types are one order of magnitude faster than older DDR3 RAMs, still cannot compete with the DDR5 type memory equipped in modern video cards. Nevertheless it is a significant step forward to improve the speed of memory operations. The continuous development of CPU technology encourages software developers to reconsider the structure and logical model of their existing graphical applications. The usage of a multi-thread game engine model is essential for today's AAA-type computer games. Developers of the most advanced graphics engines (Unreal Engine, CryEngine, Frostbite, etc.) have already recognized the potential of these new opportunities. The question may arise, whether it makes sense to deal with CPU-based solutions if powerful GPUs are available today. The answer has already been given by leading video game developers. Some modern games apply the CPU to perform specific tasks to reduce GPU load. Software occlusion culling - where the CPU is used to render polygons to occlusion buffer rather than the GPU - is a good example of this hybrid approach. Several well-known games (e.g. KillZone 3, Battlefield 3, etc.) and game engines (e.g. CryEngine) apply similar technologies because CPUs have no latency problem of occlusion queries. Rasterization is usually done in small resolution (e.g. Battlefield uses  $256 \times 114$ ) and occlusion testing can be done using a hierarchical software z-buffer [^12] [^19].
 
 Using all this as a starting point, the central question that motivates this paper is how to improve one of the fundamental visualization algorithms, i.e. a polygon fill based rasterization on CPUs. Our objective is to propose algorithms and extensions for the half-space rasterization model, which can serve as the basis of a graphics engine applying more complex, possibly a hybrid graphics pipeline using CPU for specific tasks.
 
@@ -372,7 +372,7 @@ This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 p
 
 ## References
 
-- Bethel, Z.: A Modern Approach to Software Rasterization. University  $\lceil 1 \rceil$ Workshop, Taylor University, December 14, 2011
+- [^1] Bethel, Z.: A Modern Approach to Software Rasterization. University  $\lceil 1 \rceil$ Workshop, Taylor University, December 14, 2011
 - TransGaming Inc: Why the Future of 3D Graphics is in Software, White  $\lceil 2 \rceil$ Paper: Swiftshader technology, Jan 29, 2013
 - $[3]$ Microsoft Corporation: Windows Advanced Rasterization Platform (WARP) guide. 2012
 - Abrash, M.: Rasterization on larrabee. Dr. Dobbs Portal, 2009  $[4]$
@@ -396,3 +396,4 @@ This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 p
 - $\lceil 21 \rceil$ Mileff, P., Dudra, J.: Advanced 2D Rasterization on Modern CPUs, Applied Information Science, Engineering and Technology: Selected Topics from the Field of Production Information Engineering and IT for Manufacturing: Theory and Practice, Series: Topics in Intelligent Engineering and Informatics, Vol. 7, Chapter 5, Springer International publishing, 2014, pp. 63-79
 
 - [22] Royer, P., Ituero, P., Lopez-Vallejo, M., Barrio, Carlos A. L.: Implementation Tradeoffs of Triangle Traversal Algorithms for Graphics Processing, Design of Circuits and Integrated Systems (DCIS), Madrid, Spain; November 26-28, 2014
+
