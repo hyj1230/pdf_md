@@ -20,7 +20,7 @@ However, we should not forget about the recent development of CPUs. Modern CPUs 
 
 Using all this as a starting point, the central question that motivates this paper is how to improve one of the fundamental visualization algorithms, i.e. a polygon fill based rasterization on CPUs. Our objective is to propose algorithms and extensions for the half-space rasterization model, which can serve as the basis of a graphics engine applying more complex, possibly a hybrid graphics pipeline using CPU for specific tasks.
 
-#### $\mathcal{L}$ **Related Works**
+#### 2 **Related Works**
 
 Software based rendering prospered between the end of the 90s and the beginning of the 2000's. Due to the appearance of GPUs, only a few papers (although an increasing number of) that involve the CPU in the visualisation process have been published in recent years. Most of these papers discuss general display algorithms or shader oriented GPU specific solutions which cannot be applied on CPUs in their original form.
 
@@ -36,13 +36,13 @@ In recent years, major companies in the game industry have recognized the potent
 
 Thus, as recent findings show, CPU-based approaches put an emphasis on again to increase flexibility and performance. This paper investigates the optimization and extensions of the triangle traversal and filling algorithm.
 
-#### $\mathbf{3}$ **Basics of Rasterization**
+#### 3 **Basics of Rasterization**
 
 The aim of computer visualization is to display pixel sets (e.g. 2D image or projected 3D objects) on the screen. The type of rendering algorithm or the procedure of a presentable element largely depends on the applied hardware or software based visualisation model. Rasterization is a very intensive process computationally, especially when the visual element also contains an alpha channel [7] [21].
 
 Several approaches have been developed to represent shapes in memory, but nowadays the most prevalent and most widely applied object representation is the polygon mesh. During the modelling process the object is usually divided into convex polygons, like triangles. Still, the rendering performance largely depends on the applied rasterization algorithm. Although several different solutions have been developed (Ray tracing, Volume Rendering, etc.), currently GPU manufacturers use triangle filling based models in real-time visualisation. This method allows significantly faster rendering than for example ray based algorithms.
 
-#### $3.1$ **Triangle-based Filling**
+#### 3.1 **Triangle-based Filling**
 
 In a classical sense filling is performed pixel by pixel, so the inner iteration and the various calculations need to be executed many times. Although the vertex mapping and the traversal of the process seem to be simple, the filling performance largely depends on the implemented algorithm and its optimization level. We can state that it is a huge challenge to implement an algorithm, which takes the possibilities of the modern CPU hardware into account and being highly optimized at the same time. The parts of the filling model affect each other in a complex form. The smallest change in the iteration logic can result in up to more than a 10% performance difference.
 
@@ -52,14 +52,12 @@ The scanline algorithm is widely used and can be optimized (e.g. s-buffer), but 
 
 Next, the paper focuses on the other approach, the half-space based triangle traversal, where the basic algorithm and further optimization points are presented which improves performance to a large extent.
 
-#### **Half-Space Rasterization** $\mathbf{4}$
+#### 4 **Half-Space Rasterization**
 
 The name of this model is not unified in literature; some sources refer to it as a point in a triangle, a bounding box or a half-plane algorithm. The basic idea of the model originates from the polygon convexity: the interior of a convex polygon formed by  $n$  number of edges can be defined as the intersection of the  $n$  half spaces.
 
-![](_page_5_Figure_2.jpeg)
-
 For triangles, the three half-planes clearly define the inner area.
-
+![](_page_5_Figure_2.jpeg)  
 ![](_page_5_Figure_4.jpeg)
 
 Several mathematical approaches describe the inner pixels of the triangle and they all examine the question of how to describe edges. In the following a 'Perp Dot' product-based model is presented. The Perp Dot product [20] is the twodimensional equivalent of the three dimensional cross-products. It is a product between two vectors in two dimensions and is obtained by taking the dot product of one vector with the perpendicular one of the other. The perpendicular vector is simply a vector at right angles to the vector it is based on with the same magnitude. The definition of the formula for two-dimensional vectors and applying it to  $a$ ,  $b$  vectors is the following:
@@ -396,4 +394,5 @@ This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 p
 - Leone, M., Barbagallo, L.: Implementing Software Occlusion Culling for  $\lceil 19 \rceil$ Real-Time Applications, XVIII Argentine Congress on Computer Sciences, Oct. 9., 2012
 - Hill, F. S. Jr.: The Pleasures of 'Perp Dot' Products. Chapter II.5 in  $\lceil 20 \rceil$ Graphics Gems IV (Ed. P. S. Heckbert) San Diego: Academic Press, 1994, pp. 138-148
 - $\lceil 21 \rceil$ Mileff, P., Dudra, J.: Advanced 2D Rasterization on Modern CPUs, Applied Information Science, Engineering and Technology: Selected Topics from the Field of Production Information Engineering and IT for Manufacturing: Theory and Practice, Series: Topics in Intelligent Engineering and Informatics, Vol. 7, Chapter 5, Springer International publishing, 2014, pp. 63-79
+
 - [22] Royer, P., Ituero, P., Lopez-Vallejo, M., Barrio, Carlos A. L.: Implementation Tradeoffs of Triangle Traversal Algorithms for Graphics Processing, Design of Circuits and Integrated Systems (DCIS), Madrid, Spain; November 26-28, 2014
