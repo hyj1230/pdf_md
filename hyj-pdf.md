@@ -16,14 +16,13 @@ Bay Zoltán Nonprofit Ltd. for Applied Research, Engineering Division (BAY-ENG),
 
 计算机可视化技术的历史可追溯至数十年前，但其重要性在近年尤为凸显。如今，从传统台式计算机到移动及嵌入式设备，先进图形特性几乎无处不在。这一发展成果源于漫长的技术演进，主要动力来自于图形处理器的出现。早期计算机可视化仅依赖低速 CPU 完成整个光栅化流程的所有环节，而当今该任务已由图形加速卡（目标硬件）全面接管。该领域的主要演进方向受到专业计算机游戏、媒体产业以及日益增长的 CAD/CAM 系统需求的共同推动与主导。
 
-然而，我们不应忽视 CPU 技术的最新发展。得益于多核技术和扩展指令集（如 SSE, AVX），现代 CPU 已具备诸多先进特性。除指令集升级和核心数量增加外，2014年问世的 DDR4 内存同样意义重大——尽管其速度较 DDR3 提升了一个数量级，仍无法匹敌现代显卡配备的 DDR5 显存，但这已是提升内存操作速度的重要里程碑。CPU 技术的持续进步正促使开发者重新审视现有图形应用的结构与逻辑模型。 
-多线程游戏引擎模型已成为当代 AAA 级游戏的必备架构。主流图形引擎开发商（虚幻引擎、寒霜引擎、CryEngine 等）已充分认识到这些新技术的潜力。当高性能 GPU 普及的今天，基于 CPU 的解决方案是否仍有价值？顶尖游戏开发商已给出答案：部分现代游戏通过 CPU 分担特定任务以减轻 GPU 负载。软件遮挡剔除技术即是这种混合方案的典范——由 CPU 将多边形渲染至遮挡缓冲区而非 GPU. 诸如《KillZone 3》《Battlefield 3》等知名游戏及 CryEngine 等引擎均采用类似技术，因其能规避 GPU 遮挡查询的延迟问题。此类光栅化通常在低分辨率下进行（如《Battlefield》系列采用 $256 \times 114$ 像素），并可通过软件层次 Z 缓冲实现遮挡检测。 [^12] [^19].
+然而，我们不应忽视 CPU 技术的最新发展。得益于多核技术和扩展指令集（如 SSE, AVX），现代 CPU 已具备诸多先进特性。除指令集升级和核心数量增加外，2014年问世的 DDR4 内存同样意义重大——尽管其速度较 DDR3 提升了一个数量级，仍无法匹敌现代显卡配备的 DDR5 显存，但这已是提升内存操作速度的重要里程碑。CPU 技术的持续进步正促使开发者重新审视现有图形应用的结构与逻辑模型。多线程游戏引擎模型已成为当代 AAA 级游戏的必备架构。主流图形引擎开发商（虚幻引擎、寒霜引擎、CryEngine 等）已充分认识到这些新技术的潜力。当高性能 GPU 普及的今天，基于 CPU 的解决方案是否仍有价值？顶尖游戏开发商已给出答案：部分现代游戏通过 CPU 分担特定任务以减轻 GPU 负载。软件遮挡剔除技术即是这种混合方案的典范——由 CPU 将多边形渲染至遮挡缓冲区而非 GPU. 诸如《KillZone 3》《Battlefield 3》等知名游戏及 CryEngine 等引擎均采用类似技术，因其能规避 GPU 遮挡查询的延迟问题。此类光栅化通常在低分辨率下进行（如《Battlefield》系列采用 $256 \times 114$ 像素），并可通过软件层次 Z 缓冲实现遮挡检测 [^12] [^19].
 
 基于上述研究背景，本文的核心命题在于如何改进基础渲染算法之一——即面向 CPU 平台的基于多边形填充的光栅化技术。本文旨在针对半空间光栅化模型提出创新算法及扩展方案，为构建新型图形引擎奠定基础。该引擎将采用更复杂的混合渲染管线，可能通过 CPU 执行特定任务实现效能优化。
 
 #### 2 **相关工作**
 
-Software based rendering prospered between the end of the 90s and the beginning of the 2000's. Due to the appearance of GPUs, only a few papers (although an increasing number of) that involve the CPU in the visualisation process have been published in recent years. Most of these papers discuss general display algorithms or shader oriented GPU specific solutions which cannot be applied on CPUs in their original form.
+基于软件的渲染技术在90年代末至21世纪初曾经历繁荣期。随着 GPU 的出现，近年来涉及在可视化流程中应用 CPU 的研究论文数量锐减（但数量逐步增长）。这些论文大多讨论通用显示算法或面向着色器的 GPU 专用方案，此类方案无法直接应用于 CPU 平台。
 
 During the early years of the rendering (1996-1998) ID Software and Epic Games achieved remarkable results in the area of modern software based computer graphics. Both companies have become famous for their high performance and complex graphics engine offering high quality visualization solutions (e.g. colored lighting, shadowing, volumetric lighting, fog, pixel accurate culling, etc.). These engines were optimized for the Intel Pentium MMX processor family and their rendering system was based on the scanline-based polygon filling approach applying several additional technologies (e.g. BSP tree), so as to provide high performance. After the continuous spreading of GPU-based rendering, software rendering was pushed more and more into the background. Nevertheless, some great results, e.g. Pixomatic Renderer developed by Rad Game Tools and the Swiftshader [2] by TransGaming were achieved. Both products are fully DirectX 9 compatible, very complex and highly optimized taking advantage of multi-core threading possibilities of modern CPUs. Their pixel pipeline can continuously modify itself adapting to the actual rendering tasks. Since these products are all proprietary, the details of their architectures are not available for the general public. By developing DirectX, Microsoft provided the basis for the spread of GPU technologies, and it also developed a software rasterizer called WARP [3]. The renderer is capable of taking advantage of multi-threads and in some cases it is even able to outperform low-end integrated graphics cards.
 
@@ -371,34 +370,27 @@ Although present day rasterization is almost exclusively performed by GPUs, we c
 
 This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 project with support by the European Union, co-financed by the European Social Fund.
 
-## References
+## 参考资料
 
-- [^1] Bethel, Z.: A Modern Approach to Software Rasterization. University  $\lceil 1 \rceil$ Workshop, Taylor University, December 14, 2011
-- TransGaming Inc: Why the Future of 3D Graphics is in Software, White  $\lceil 2 \rceil$ Paper: Swiftshader technology, Jan 29, 2013
-- $[3]$ Microsoft Corporation: Windows Advanced Rasterization Platform (WARP) guide. 2012
-- Abrash, M.: Rasterization on larrabee. Dr. Dobbs Portal, 2009  $[4]$
-- $[5]$ Seiler, L., Carmean, D., Sprangle, E., Forsyth, T., Abrash, M., Dubey, P., Junkins, S., Lake, A., Sugerman, J., Cavin, R., Espasa, R., Grochowski, E., Juan, T., Hanrahan, P.: Larrabee: a Many-Core x86 Architecture for Visual Computing. ACM Transactions on Graphics (TOG) - Proceedings of ACM SIGGRAPH 2008 Volume 27 Issue 3, August 2008
-- Laine, S., Karras T.: High-Performance Software Rasterization on GPUs.  $[6]$ High Performance Graphics, Vancouver, Canada, August 5, 2011
-- $[7]$ Akenine-möller, T., haines, E.: Real-Time Rendering, A. K. Peters. 3<sup>rd</sup> Edition, 2008
-- Sugerman, J., Fatahalian, K., Boulos, S., Akeley, K., and Hanrahan, P.: [8] Gramps: A Programming Model for Graphics Pipelines. ACM Trans. Graph. 28, 4:1–4:11, 2009
-- $[9]$ Fang, L., Mengcheng H., Xuehui L., Enhua W.: FreePipe: A Programmable, Parallel Rendering Architecture for Efficient Multi-Fragment Effects. In Proceedings of ACM SIGGRAPH Symposium on Interactive 3D Graphics and Games, 2010
-- [10] Agner, F.: Optimizing Software in  $C^{++}$  An Optimization Guide for Windows, Linux and Mac platforms. Study at Copenhagen University College of Engineering, 2014
-- Swenney, T.: The End of the GPU Roadmap. Proceedings of the  $\lceil 11 \rceil$ Conference on High Performance Graphics, 2009, pp. 45-52
-
-- $\lceil 12 \rceil$ Coffin, C.: SPU-based Deferred Shading for Battlefield 3 on Playstation 3. Game Developer Conference Presentation, March 8, 2011
-- Xuzhi W., Feng G., Mengyao, Z.: A More Efficient Triangle Rasterization  $\lceil 13 \rceil$ Algorithm Implemented in FPGA, Audio, Language and Image Processing (ICALIP), July 16-18, 2012
-- McCormack J., McNamara R.: Tiled Polygon Traversal Using Half-Plane  $\lceil 14 \rceil$ Edge Functions. **HWWS**  $'00$ Proceedings  $\overline{of}$ the  $ACM$ SIGGRAPH/EUROGRAPHICS workshop on Graphics hardware, 2000, pp. 15-21
-- [15] Chih-Hao, S., You-Ming, T., Ka-Hang, L., Shao-Yi, C.: Universal Rasterizer with Edge Equations and Tile-Scan Triangle Traversal Algorithm for Graphics Processing Units, In proceeding of: Proceedings of the 2009 IEEE International Conference on Multimedia and Expo, 2009
-- Valient, M.: Practical Occlusion Culling in Killzone 3, Siggraph 2011,  $\lceil 16 \rceil$ Vancouver, Oct. 14, 2011
-- $\lceil 17 \rceil$ Olano, M., Trey, G.: Triangle Scan Conversion Using 2D Homogeneous Coordinates, Proceedings of the 1997 SIGGRAPH/Eurographics Workshop on Graphics Hardware, ACM SIGGRAPH, New York, August 2-4, 1997
-- $[18]$ Chandrasekaran, C.: Software Occlusion Culling, Intel Developer Zone, Jan 14, 2013
-- Leone, M., Barbagallo, L.: Implementing Software Occlusion Culling for  $\lceil 19 \rceil$ Real-Time Applications, XVIII Argentine Congress on Computer Sciences, Oct. 9., 2012
-- Hill, F. S. Jr.: The Pleasures of 'Perp Dot' Products. Chapter II.5 in  $\lceil 20 \rceil$ Graphics Gems IV (Ed. P. S. Heckbert) San Diego: Academic Press, 1994, pp. 138-148
-- $\lceil 21 \rceil$ Mileff, P., Dudra, J.: Advanced 2D Rasterization on Modern CPUs, Applied Information Science, Engineering and Technology: Selected Topics from the Field of Production Information Engineering and IT for Manufacturing: Theory and Practice, Series: Topics in Intelligent Engineering and Informatics, Vol. 7, Chapter 5, Springer International publishing, 2014, pp. 63-79
-
-- [22] Royer, P., Ituero, P., Lopez-Vallejo, M., Barrio, Carlos A. L.: Implementation Tradeoffs of Triangle Traversal Algorithms for Graphics Processing, Design of Circuits and Integrated Systems (DCIS), Madrid, Spain; November 26-28, 2014
-
-
-
-
-
+[^1]: Bethel, Z.: A Modern Approach to Software Rasterization. University  $\lceil 1 \rceil$ Workshop, Taylor University, December 14, 2011
+[^2]: TransGaming Inc: Why the Future of 3D Graphics is in Software, White  $\lceil 2 \rceil$ Paper: Swiftshader technology, Jan 29, 2013
+[^3]: Microsoft Corporation: Windows Advanced Rasterization Platform (WARP) guide. 2012
+[^4]: Abrash, M.: Rasterization on larrabee. Dr. Dobbs Portal, 2009
+[^5]: Seiler, L., Carmean, D., Sprangle, E., Forsyth, T., Abrash, M., Dubey, P., Junkins, S., Lake, A., Sugerman, J., Cavin, R., Espasa, R., Grochowski, E., Juan, T., Hanrahan, P.: Larrabee: a Many-Core x86 Architecture for Visual Computing. ACM Transactions on Graphics (TOG) - Proceedings of ACM SIGGRAPH 2008 Volume 27 Issue 3, August 2008
+[^6]: Laine, S., Karras T.: High-Performance Software Rasterization on GPUs. High Performance Graphics, Vancouver, Canada, August 5, 2011
+[^7]: Akenine-möller, T., haines, E.: Real-Time Rendering, A. K. Peters. 3<sup>rd</sup> Edition, 2008
+[^8]: Sugerman, J., Fatahalian, K., Boulos, S., Akeley, K., and Hanrahan, P.: Gramps: A Programming Model for Graphics Pipelines. ACM Trans. Graph. 28, 4:1–4:11, 2009
+[^9]: Fang, L., Mengcheng H., Xuehui L., Enhua W.: FreePipe: A Programmable, Parallel Rendering Architecture for Efficient Multi-Fragment Effects. In Proceedings of ACM SIGGRAPH Symposium on Interactive 3D Graphics and Games, 2010
+[^10]: Agner, F.: Optimizing Software in C++ An Optimization Guide for Windows, Linux and Mac platforms. Study at Copenhagen University College of Engineering, 2014
+[^11]: Swenney, T.: The End of the GPU Roadmap. Proceedings of the Conference on High Performance Graphics, 2009, pp. 45-52
+[^12]: Coffin, C.: SPU-based Deferred Shading for Battlefield 3 on Playstation 3. Game Developer Conference Presentation, March 8, 2011
+[^13]: Xuzhi W., Feng G., Mengyao, Z.: A More Efficient Triangle Rasterization Algorithm Implemented in FPGA, Audio, Language and Image Processing (ICALIP), July 16-18, 2012
+[^14]: McCormack J., McNamara R.: Tiled Polygon Traversal Using Half-Plane Edge Functions. HWWS '00 Proceedings of the  ACM SIGGRAPH/EUROGRAPHICS workshop on Graphics hardware, 2000, pp. 15-21
+[^15]: Chih-Hao, S., You-Ming, T., Ka-Hang, L., Shao-Yi, C.: Universal Rasterizer with Edge Equations and Tile-Scan Triangle Traversal Algorithm for Graphics Processing Units, In proceeding of: Proceedings of the 2009 IEEE International Conference on Multimedia and Expo, 2009
+[^16]: Valient, M.: Practical Occlusion Culling in Killzone 3, Siggraph 2011, Vancouver, Oct. 14, 2011
+[^17]: Olano, M., Trey, G.: Triangle Scan Conversion Using 2D Homogeneous Coordinates, Proceedings of the 1997 SIGGRAPH/Eurographics Workshop on Graphics Hardware, ACM SIGGRAPH, New York, August 2-4, 1997
+[^18]: Chandrasekaran, C.: Software Occlusion Culling, Intel Developer Zone, Jan 14, 2013
+[^19]: Leone, M., Barbagallo, L.: Implementing Software Occlusion Culling for Real-Time Applications, XVIII Argentine Congress on Computer Sciences, Oct. 9., 2012
+[^20]: Hill, F. S. Jr.: The Pleasures of 'Perp Dot' Products. Chapter II.5 in Graphics Gems IV (Ed. P. S. Heckbert) San Diego: Academic Press, 1994, pp. 138-148
+[^21]: Mileff, P., Dudra, J.: Advanced 2D Rasterization on Modern CPUs, Applied Information Science, Engineering and Technology: Selected Topics from the Field of Production Information Engineering and IT for Manufacturing: Theory and Practice, Series: Topics in Intelligent Engineering and Informatics, Vol. 7, Chapter 5, Springer International publishing, 2014, pp. 63-79
+[^22]: Royer, P., Ituero, P., Lopez-Vallejo, M., Barrio, Carlos A. L.: Implementation Tradeoffs of Triangle Traversal Algorithms for Graphics Processing, Design of Circuits and Integrated Systems (DCIS), Madrid, Spain; November 26-28, 2014
