@@ -83,7 +83,7 @@ The final point-triangle containment relation depends on the prior knowledge of 
 
  $(c_1 > 0 \&\& c_2 > 0 \&\& c_3 > 0 \mid c_1 < 0 \&\& c_2 < 0 \&\& c_3 < 0)$ 
 
-#### $4.1$ **The Simple Filling Approach**
+#### 4.1 **The Simple Filling Approach**
 
 Based on the equations above, a simple filling algorithm can be formulated. First of all a bounded area is needed to specify which set of pixels is required to travel. We can use the area of the render target (e.g. screen buffer), but it requires a lot of unnecessary iterations. A better solution is if we use the axis aligned bounding box of the triangle. The pseudo code of the algorithm:
 
@@ -109,7 +109,7 @@ Although the basic algorithm seems simple, the model is not recommended in pract
 
 In the following, new approaches and optimizations will be presented, which dramatically improve the performance of the basic algorithm making it suitable for real-time games and other graphics-intensive applications.
 
-#### **Optimization Considerations** $\mathbf{5}$
+#### 5 **Optimization Considerations**
 
 Developing a fast rasterizer is a complex task, high-level and multi-layered (code and logic level) optimization is required. In order to achieve really good results, full graphics pipeline optimization should be performed. However, the present paper focuses on improving the rasterization performance. The rasterization process constitutes the dominant part of the total performance requirement of the image synthesis [21]. Thus, any kind of performance improvement (even eliminating a division) affects the final result significantly.
 
@@ -394,6 +394,7 @@ This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 p
 [^20]: Hill, F. S. Jr.: The Pleasures of 'Perp Dot' Products. Chapter II.5 in Graphics Gems IV (Ed. P. S. Heckbert) San Diego: Academic Press, 1994, pp. 138-148
 [^21]: Mileff, P., Dudra, J.: Advanced 2D Rasterization on Modern CPUs, Applied Information Science, Engineering and Technology: Selected Topics from the Field of Production Information Engineering and IT for Manufacturing: Theory and Practice, Series: Topics in Intelligent Engineering and Informatics, Vol. 7, Chapter 5, Springer International publishing, 2014, pp. 63-79
 [^22]: Royer, P., Ituero, P., Lopez-Vallejo, M., Barrio, Carlos A. L.: Implementation Tradeoffs of Triangle Traversal Algorithms for Graphics Processing, Design of Circuits and Integrated Systems (DCIS), Madrid, Spain; November 26-28, 2014
+
 
 
 
