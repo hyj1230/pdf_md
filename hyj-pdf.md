@@ -19,9 +19,9 @@ Bay Zoltán Nonprofit Ltd. for Applied Research, Engineering Division (BAY-ENG),
 然而，我们不应忽视 CPU 技术的最新发展。得益于多核技术和扩展指令集（如 SSE, AVX），现代 CPU 已具备诸多先进特性。除指令集升级和核心数量增加外，2014年问世的 DDR4 内存同样意义重大——尽管其速度较 DDR3 提升了一个数量级，仍无法匹敌现代显卡配备的 DDR5 显存，但这已是提升内存操作速度的重要里程碑。CPU 技术的持续进步正促使开发者重新审视现有图形应用的结构与逻辑模型。 
 多线程游戏引擎模型已成为当代 AAA 级游戏的必备架构。主流图形引擎开发商（虚幻引擎、寒霜引擎、CryEngine 等）已充分认识到这些新技术的潜力。当高性能 GPU 普及的今天，基于 CPU 的解决方案是否仍有价值？顶尖游戏开发商已给出答案：部分现代游戏通过 CPU 分担特定任务以减轻 GPU 负载。软件遮挡剔除技术即是这种混合方案的典范——由 CPU 将多边形渲染至遮挡缓冲区而非 GPU. 诸如《KillZone 3》《Battlefield 3》等知名游戏及 CryEngine 等引擎均采用类似技术，因其能规避 GPU 遮挡查询的延迟问题。此类光栅化通常在低分辨率下进行（如《Battlefield》系列采用 $256 \times 114$ 像素），并可通过软件层次 Z 缓冲实现遮挡检测。 [^12] [^19].
 
-Using all this as a starting point, the central question that motivates this paper is how to improve one of the fundamental visualization algorithms, i.e. a polygon fill based rasterization on CPUs. Our objective is to propose algorithms and extensions for the half-space rasterization model, which can serve as the basis of a graphics engine applying more complex, possibly a hybrid graphics pipeline using CPU for specific tasks.
+基于上述研究背景，本文的核心命题在于如何改进基础渲染算法之一——即面向 CPU 平台的基于多边形填充的光栅化技术。本文旨在针对半空间光栅化模型提出创新算法及扩展方案，为构建新型图形引擎奠定基础。该引擎将采用更复杂的混合渲染管线，可能通过 CPU 执行特定任务实现效能优化。
 
-#### 2 **Related Works**
+#### 2 **相关工作**
 
 Software based rendering prospered between the end of the 90s and the beginning of the 2000's. Due to the appearance of GPUs, only a few papers (although an increasing number of) that involve the CPU in the visualisation process have been published in recent years. Most of these papers discuss general display algorithms or shader oriented GPU specific solutions which cannot be applied on CPUs in their original form.
 
@@ -397,6 +397,7 @@ This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 p
 - $\lceil 21 \rceil$ Mileff, P., Dudra, J.: Advanced 2D Rasterization on Modern CPUs, Applied Information Science, Engineering and Technology: Selected Topics from the Field of Production Information Engineering and IT for Manufacturing: Theory and Practice, Series: Topics in Intelligent Engineering and Informatics, Vol. 7, Chapter 5, Springer International publishing, 2014, pp. 63-79
 
 - [22] Royer, P., Ituero, P., Lopez-Vallejo, M., Barrio, Carlos A. L.: Implementation Tradeoffs of Triangle Traversal Algorithms for Graphics Processing, Design of Circuits and Integrated Systems (DCIS), Madrid, Spain; November 26-28, 2014
+
 
 
 
