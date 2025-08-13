@@ -62,16 +62,13 @@ Bay Zoltán Nonprofit Ltd. for Applied Research, Engineering Division (BAY-ENG),
 
 多种数学方法可描述三角形内部像素，这些方法的核心都在于如何定义三角形边界。下文将介绍基于"垂直点积"（Perp Dot product）的模型。该运算本质上是三维叉积（cross-products）在二维空间的对应概念，通过计算一个向量与另一向量的垂直向量的点积获得。此垂直向量基于原向量旋转90度得到，且保持模长不变。二维向量 $a$ 与 $b$ 的垂直点积公式定义如下：  
 
-$$\begin{align}a^2+b^2=c^2\tag{1.1}\end{align}$$
+![](https://www.zhihu.com/equation?tex=%5cbegin%7balign%7d%5coperatorname%7bperpDotP%7d(a%2cb)+%3d+a%5e%7b%5cperp%7d+%5ccdot+b+%3d+a_x+b_y+-+a_y+b_x+%3d+%5cbegin%7bvmatrix%7d+a_x+%26+a_y+%5c%5c+b_x+%26+b_y+%5cend%7bvmatrix%7d.%5ctag%7b1%7d%5cend%7balign%7d)
+<!-- \begin{align}\operatorname{perpDotP}(a,b) = a^{\perp} \cdot b = a_x b_y - a_y b_x = \begin{vmatrix} a_x & a_y \\ b_x & b_y \end{vmatrix}.\tag{1}\end{align} -->
 
-$$perpDotP(a,b) = a^{\perp} \cdot b = a_x b_y - a_y b_x = \begin{vmatrix} a_x & a_y \\ b_x & b_y \end{vmatrix}.$$
- (1)
-
-The result is a scalar, which has specific properties:
-
-- $perpDotP(a, b) = 0 \rightarrow a, b$  are parallel
-- $perpDotP(a, b) > 0 \rightarrow b$  is counterclockwise from a
-- $perpDotP(a, b) < 0 \rightarrow a$  is counterclockwise from b  $\bullet$
+该运算结果为标量，具有以下特性：  
+- $perpDotP(a, b) = 0 \rightarrow a, b$ 两向量平行  
+- $perpDotP(a, b) > 0 \rightarrow b$ 位于 $a$ 的逆时针方向  
+- $perpDotP(a, b) < 0 \rightarrow a$ 位于 $b$ 的逆时针方向 $\bullet$  
 
 These properties are useful to determine whether a pixel is inside the triangle or not. In the case of a P point, the product needs to be calculated with all the three edges and to check its sign,
 
@@ -396,6 +393,7 @@ This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 p
 [^20]: Hill, F. S. Jr.: The Pleasures of 'Perp Dot' Products. Chapter II.5 in Graphics Gems IV (Ed. P. S. Heckbert) San Diego: Academic Press, 1994, pp. 138-148
 [^21]: Mileff, P., Dudra, J.: Advanced 2D Rasterization on Modern CPUs, Applied Information Science, Engineering and Technology: Selected Topics from the Field of Production Information Engineering and IT for Manufacturing: Theory and Practice, Series: Topics in Intelligent Engineering and Informatics, Vol. 7, Chapter 5, Springer International publishing, 2014, pp. 63-79
 [^22]: Royer, P., Ituero, P., Lopez-Vallejo, M., Barrio, Carlos A. L.: Implementation Tradeoffs of Triangle Traversal Algorithms for Graphics Processing, Design of Circuits and Integrated Systems (DCIS), Madrid, Spain; November 26-28, 2014
+
 
 
 
