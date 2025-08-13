@@ -77,9 +77,9 @@ Bay Zoltán Nonprofit Ltd. for Applied Research, Engineering Division (BAY-ENG),
 
 The final point-triangle containment relation depends on the prior knowledge of the triangle:
 
-- if the vertices A, B, C are given in clockwise order, then P is inside the triangle if  $c_1 > 0$  &&  $c_2 > 0$  &&  $c_3 > 0$
-- if the vertices A, B, C are given in counter-clockwise order, then P is inside the triangle if  $c_1 < 0$  &&  $c_2 < 0 \text{\&\&} c_3 < 0$
-- if the order of the vertices A, B, C is unknown, then P is inside the triangle if ![](https://www.zhihu.com/equation?tex=(c_1+%3e+0%5c+%5c%26%5c%26%5c+c_2+%3e+0%5c+%5c%26%5c%26%5c+c_3+%3e+0%5c+%7c%7c%5c+c_1+%3c+0%5c+%5c%26%5c%26%5c+c_2+%3c+0%5c+%5c%26%5c%26%5c+c_3+%3c+0)) <!-- (c_1 > 0\ \&\&\ c_2 > 0\ \&\&\ c_3 > 0\ ||\ c_1 < 0\ \&\&\ c_2 < 0\ \&\&\ c_3 < 0) -->  
+- 如果顶点 A, B, C 按顺时针顺序给出，then P is inside the triangle if  $c_1 > 0$  &&  $c_2 > 0$  &&  $c_3 > 0$
+- 如果顶点 A, B, C 按逆时针顺序给出，then P is inside the triangle if  $c_1 < 0$  &&  $c_2 < 0 \text{\&\&} c_3 < 0$
+- 如果顶点 A, B, C 的顺序未知，then P is inside the triangle if ![](https://www.zhihu.com/equation?tex=(c_1+%3e+0%5c+%5c%26%5c%26%5c+c_2+%3e+0%5c+%5c%26%5c%26%5c+c_3+%3e+0%5c+%7c%7c%5c+c_1+%3c+0%5c+%5c%26%5c%26%5c+c_2+%3c+0%5c+%5c%26%5c%26%5c+c_3+%3c+0)) <!-- (c_1 > 0\ \&\&\ c_2 > 0\ \&\&\ c_3 > 0\ ||\ c_1 < 0\ \&\&\ c_2 < 0\ \&\&\ c_3 < 0) -->  
 
 #### 4.1 **The Simple Filling Approach**
 
@@ -392,5 +392,6 @@ This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 p
 [^20]: Hill, F. S. Jr.: The Pleasures of 'Perp Dot' Products. Chapter II.5 in Graphics Gems IV (Ed. P. S. Heckbert) San Diego: Academic Press, 1994, pp. 138-148
 [^21]: Mileff, P., Dudra, J.: Advanced 2D Rasterization on Modern CPUs, Applied Information Science, Engineering and Technology: Selected Topics from the Field of Production Information Engineering and IT for Manufacturing: Theory and Practice, Series: Topics in Intelligent Engineering and Informatics, Vol. 7, Chapter 5, Springer International publishing, 2014, pp. 63-79
 [^22]: Royer, P., Ituero, P., Lopez-Vallejo, M., Barrio, Carlos A. L.: Implementation Tradeoffs of Triangle Traversal Algorithms for Graphics Processing, Design of Circuits and Integrated Systems (DCIS), Madrid, Spain; November 26-28, 2014
+
 
 
