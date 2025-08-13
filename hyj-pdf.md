@@ -60,8 +60,13 @@ Bay Zoltán Nonprofit Ltd. for Applied Research, Engineering Division (BAY-ENG),
 ![](_page_5_Figure_2.jpeg)  
 ![](_page_5_Figure_4.jpeg)
 
-Several mathematical approaches describe the inner pixels of the triangle and they all examine the question of how to describe edges. In the following a 'Perp Dot' product-based model is presented. The Perp Dot product [20] is the twodimensional equivalent of the three dimensional cross-products. It is a product between two vectors in two dimensions and is obtained by taking the dot product of one vector with the perpendicular one of the other. The perpendicular vector is simply a vector at right angles to the vector it is based on with the same magnitude. The definition of the formula for two-dimensional vectors and applying it to  $a$ ,  $b$  vectors is the following:
+多种数学方法可描述三角形内部像素，这些方法的核心都在于如何定义三角形边界。下文将介绍基于"垂直点积"（Perp Dot product）的模型。该运算本质上是三维叉积（cross-products）在二维空间的对应概念，通过计算一个向量与另一向量的垂直向量的点积获得。此垂直向量基于原向量旋转90度得到，且保持模长不变。二维向量 $a$ 与 $b$ 的垂直点积公式定义如下：  
 
+$$\begin{align}
+
+a^2+b^2=c^2\tag{1.1}
+
+\end{align}$$
 $$perpDotP(a,b) = a^{\perp} \cdot b = a_x b_y - a_y b_x = \begin{vmatrix} a_x & a_y \\ b_x & b_y \end{vmatrix}.$$
  (1)
 
@@ -394,6 +399,7 @@ This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 p
 [^20]: Hill, F. S. Jr.: The Pleasures of 'Perp Dot' Products. Chapter II.5 in Graphics Gems IV (Ed. P. S. Heckbert) San Diego: Academic Press, 1994, pp. 138-148
 [^21]: Mileff, P., Dudra, J.: Advanced 2D Rasterization on Modern CPUs, Applied Information Science, Engineering and Technology: Selected Topics from the Field of Production Information Engineering and IT for Manufacturing: Theory and Practice, Series: Topics in Intelligent Engineering and Informatics, Vol. 7, Chapter 5, Springer International publishing, 2014, pp. 63-79
 [^22]: Royer, P., Ituero, P., Lopez-Vallejo, M., Barrio, Carlos A. L.: Implementation Tradeoffs of Triangle Traversal Algorithms for Graphics Processing, Design of Circuits and Integrated Systems (DCIS), Madrid, Spain; November 26-28, 2014
+
 
 
 
