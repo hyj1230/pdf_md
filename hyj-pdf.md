@@ -70,17 +70,16 @@ Bay Zoltán Nonprofit Ltd. for Applied Research, Engineering Division (BAY-ENG),
 - ![](https://www.zhihu.com/equation?tex=%5coperatorname%7bperpDotP%7d(a%2c+b)+%3e+0+%5crightarrow+b+%5c+%5ctext%7b%e4%bd%8d%e4%ba%8e%7d+%5c+a+%5c+%5ctext%7b%e7%9a%84%e9%80%86%e6%97%b6%e9%92%88%e6%96%b9%e5%90%91%7d) <!-- \operatorname{perpDotP}(a, b) > 0 \rightarrow b \ \text{位于} \ a \ \text{的逆时针方向} -->  
 - ![](https://www.zhihu.com/equation?tex=%5coperatorname%7bperpDotP%7d(a%2c+b)+%3c+0+%5crightarrow+a+%5c+%5ctext%7b%e4%bd%8d%e4%ba%8e%7d+%5c+b+%5c+%5ctext%7b%e7%9a%84%e9%80%86%e6%97%b6%e9%92%88%e6%96%b9%e5%90%91%7d) <!-- \operatorname{perpDotP}(a, b) < 0 \rightarrow a \ \text{位于} \ b \ \text{的逆时针方向} -->  
 
-These properties are useful to determine whether a pixel is inside the triangle or not. In the case of a P point, the product needs to be calculated with all the three edges and to check its sign,
+这些特性对判定像素是否位于三角形内部至关重要。对于点P，需分别计算其与三条边的垂直点积并检验符号，
 
-$$c_1 = perpDotP(a, p), c_2 = perpDotP(b, p), c_3 = perpDotP(c, p).$$
+![](https://www.zhihu.com/equation?tex=c_1+%3d+%5coperatorname%7bperpDotP%7d(a%2c+p)%2c%5c+c_2+%3d+%5coperatorname%7bperpDotP%7d(b%2c+p)%2c%5c+c_3+%3d+%5coperatorname%7bperpDotP%7d(c%2c+p).)
+<!-- c_1 = \operatorname{perpDotP}(a, p),\ c_2 = \operatorname{perpDotP}(b, p),\ c_3 = \operatorname{perpDotP}(c, p). -->
 
 The final point-triangle containment relation depends on the prior knowledge of the triangle:
 
-- $\bullet$ if the vertices A, B, C are given in clockwise order, then P is inside the triangle if  $c_1 > 0$  &&  $c_2 > 0$  &&  $c_3 > 0$
-- if the vertices A, B, C are given in counter-clockwise order, then P is inside the triangle if  $c_1 < 0$  &&  $c_2 < 0$  &&  $c_3 < 0$
-- if the order of the vertices A, B, C is unknown, then P is inside the  $\bullet$ triangle if
-
- $(c_1 > 0 \&\& c_2 > 0 \&\& c_3 > 0 \mid c_1 < 0 \&\& c_2 < 0 \&\& c_3 < 0)$ 
+- if the vertices A, B, C are given in clockwise order, then P is inside the triangle if  $c_1 > 0$  &&  $c_2 > 0$  &&  $c_3 > 0$
+- if the vertices A, B, C are given in counter-clockwise order, then P is inside the triangle if  $c_1 < 0$  &&  $c_2 < 0 \text{\&\&} c_3 < 0$
+- if the order of the vertices A, B, C is unknown, then P is inside the triangle if $(c_1 > 0 \&\& c_2 > 0 \&\& c_3 > 0 || c_1 < 0 \&\& c_2 < 0 \&\& c_3 < 0)$ 
 
 #### 4.1 **The Simple Filling Approach**
 
@@ -393,3 +392,4 @@ This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 p
 [^20]: Hill, F. S. Jr.: The Pleasures of 'Perp Dot' Products. Chapter II.5 in Graphics Gems IV (Ed. P. S. Heckbert) San Diego: Academic Press, 1994, pp. 138-148
 [^21]: Mileff, P., Dudra, J.: Advanced 2D Rasterization on Modern CPUs, Applied Information Science, Engineering and Technology: Selected Topics from the Field of Production Information Engineering and IT for Manufacturing: Theory and Practice, Series: Topics in Intelligent Engineering and Informatics, Vol. 7, Chapter 5, Springer International publishing, 2014, pp. 63-79
 [^22]: Royer, P., Ituero, P., Lopez-Vallejo, M., Barrio, Carlos A. L.: Implementation Tradeoffs of Triangle Traversal Algorithms for Graphics Processing, Design of Circuits and Integrated Systems (DCIS), Madrid, Spain; November 26-28, 2014
+
