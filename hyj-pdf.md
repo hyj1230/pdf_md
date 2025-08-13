@@ -34,25 +34,25 @@ Bay Zoltán Nonprofit Ltd. for Applied Research, Engineering Division (BAY-ENG),
 
 近年来，游戏行业的主要公司再次认识到了 CPU 的潜力[^11]。他们的游戏引擎可以将特定的可视化任务委派给 CPU。在游戏 Battlefield 3 中，开发了一种基于 SPU 的延迟着色模型[^12]，其目标是利用 SPU 来分配着色工作并减轻 GPU 的负担。2011年，游戏 Killzone 3 支持复杂的被遮挡环境。为了在帧的早期剔除不可见几何体，该游戏利用 PlayStation 3 的 SPU 来光栅化一个保守深度缓冲（conservative depth buffer），并针对它执行快速的同步遮挡查询[^16]。软件遮挡剔除的主题也已被 Intel Software 在文献 [^18] 中研究过。该文献提出了一种类似 Killzone 的解决方案，但它是建立在 x86 架构基础之上，并针对 SSE 流式扩展进行了优化。
 
-Thus, as recent findings show, CPU-based approaches put an emphasis on again to increase flexibility and performance. This paper investigates the optimization and extensions of the triangle traversal and filling algorithm.
+因此，正如最新研究表明，基于 CPU 的方法重新受到重视，旨在提升灵活性与性能。本文重点研究三角形遍历与填充算法的优化与扩展方法。
 
-#### 3 **Basics of Rasterization**
+#### 3 **光栅化基础**
 
-The aim of computer visualization is to display pixel sets (e.g. 2D image or projected 3D objects) on the screen. The type of rendering algorithm or the procedure of a presentable element largely depends on the applied hardware or software based visualisation model. Rasterization is a very intensive process computationally, especially when the visual element also contains an alpha channel [7] [21].
+计算机可视化的目标是在屏幕上显示像素集合（例如二维图像或投影的三维物体）。渲染算法的类型或可呈现元素的处理流程，很大程度上取决于所采用的基于硬件或软件的可视化模型。光栅化是计算密集型的过程，当视觉元素包含 alpha 通道时尤为显著[^7][^21]。
 
-Several approaches have been developed to represent shapes in memory, but nowadays the most prevalent and most widely applied object representation is the polygon mesh. During the modelling process the object is usually divided into convex polygons, like triangles. Still, the rendering performance largely depends on the applied rasterization algorithm. Although several different solutions have been developed (Ray tracing, Volume Rendering, etc.), currently GPU manufacturers use triangle filling based models in real-time visualisation. This method allows significantly faster rendering than for example ray based algorithms.
+尽管已发展出多种内存中表示形状的方法，但当今最主流且广泛应用的物体表示形式是多边形网格。在建模过程中，物体通常被分解为凸多边形（如三角形）。然而，渲染性能在很大程度上依赖于所采用的光栅化算法。虽然已开发出多种不同解决方案（光线追踪、立体渲染等），当前 GPU 制造商在实时可视化中普遍采用基于三角形填充的模型——该方法相比基于光线的算法能实现显著更快的渲染速度。
 
-#### 3.1 **Triangle-based Filling**
+#### 3.1 **基于三角形的填充**
 
-In a classical sense filling is performed pixel by pixel, so the inner iteration and the various calculations need to be executed many times. Although the vertex mapping and the traversal of the process seem to be simple, the filling performance largely depends on the implemented algorithm and its optimization level. We can state that it is a huge challenge to implement an algorithm, which takes the possibilities of the modern CPU hardware into account and being highly optimized at the same time. The parts of the filling model affect each other in a complex form. The smallest change in the iteration logic can result in up to more than a 10% performance difference.
+在传统意义上，填充操作需逐像素执行，因此内部迭代及各类计算需反复运行。尽管顶点映射与遍历过程看似简单，但填充性能很大程度上取决于所实现的算法及其优化程度。可以说，开发一种既充分考虑现代 CPU 硬件特性又高度优化的算法面临巨大挑战。填充模型的各组件以复杂方式相互影响，迭代逻辑的微小改动甚至可导致超过 10% 的性能差异。
 
-Nowadays there are two widespread triangle filling algorithms: the scanline and the half-space based algorithms. The main idea of the previous scanline approach was to walk triangle line by line (scanline) from top to bottom. Each row represents a line, whose starting and ending points are the intersections of the triangle sides and the scanline along the  $x$  axis. The end points of the line can be calculated incrementally using the slope values of the edges.
+当前存在两种主流三角形填充算法：扫描线算法与基于半空间的算法。经典扫描线算法的核心思想是自上而下逐行（扫描线）遍历三角形。每一行代表一条线段，其起点和终点由三角形边与扫描线沿 $x$ 轴的交点确定。利用边的斜率值可通过增量方式计算线段端点。
 
-The scanline algorithm is widely used and can be optimized (e.g. s-buffer), but it is difficult to adapt it to current hardware opportunities. The rasterization is performed line by line, which has several unpleasant consequences for both hardware and software implementation. One of these problems is that the algorithm is asymmetric in  $x$  and  $y$  directions. In the case of thin triangles, the performance may significantly vary between the horizontal and vertical orientation. The outer scanline loop is serial, which is not favourable for hardware implementation. The inner loop, which is responsible for scanline iteration is not so SIMD-friendly because of the different line lengths. This makes the algorithm orientation-dependent. Processing several lines at the same time for some reason (e.g. Mipmapping, Multisampling) would mean further complications for calculations. To sum up, the solution is hard to apply for parallel processing of lines and pixels. A better solution would be if pixels were processed in 2x2 blocks (quads), the expected increase in the performance would be significant.
+扫描线算法虽应用广泛且可优化（如 s-buffer 技术），但难以适配现代硬件特性。其逐行光栅化模式对软硬件实现均存在多重弊端。其中一个问题是算法在 $x$ 和 $y$ 方向上不对称。对于细长三角形，水平和垂直方向的性能可能差异显著。外部扫描线循环是串行的，不利于硬件实现。负责扫描线迭代的内部循环因行长度不同而SIMD友好性不足。这导致算法具有方向依赖性。若因某些原因（如 Mipmapping, Multisampling）需同时处理多行，计算会进一步复杂化。总之，该方案难以应用于行和像素的并行处理。更好的解决方案是以2x2块（四边形）处理像素，预期将显著提升性能。
 
-Next, the paper focuses on the other approach, the half-space based triangle traversal, where the basic algorithm and further optimization points are presented which improves performance to a large extent.
+下文将聚焦基于半空间的三角形遍历方案，阐述其基础算法及深度优化策略，这些优化可大幅提升性能。
 
-#### 4 **Half-Space Rasterization**
+#### 4 **半空间光栅化**
 
 The name of this model is not unified in literature; some sources refer to it as a point in a triangle, a bounding box or a half-plane algorithm. The basic idea of the model originates from the polygon convexity: the interior of a convex polygon formed by  $n$  number of edges can be defined as the intersection of the  $n$  half spaces.
 
@@ -394,6 +394,7 @@ This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 p
 [^20]: Hill, F. S. Jr.: The Pleasures of 'Perp Dot' Products. Chapter II.5 in Graphics Gems IV (Ed. P. S. Heckbert) San Diego: Academic Press, 1994, pp. 138-148
 [^21]: Mileff, P., Dudra, J.: Advanced 2D Rasterization on Modern CPUs, Applied Information Science, Engineering and Technology: Selected Topics from the Field of Production Information Engineering and IT for Manufacturing: Theory and Practice, Series: Topics in Intelligent Engineering and Informatics, Vol. 7, Chapter 5, Springer International publishing, 2014, pp. 63-79
 [^22]: Royer, P., Ituero, P., Lopez-Vallejo, M., Barrio, Carlos A. L.: Implementation Tradeoffs of Triangle Traversal Algorithms for Graphics Processing, Design of Circuits and Integrated Systems (DCIS), Madrid, Spain; November 26-28, 2014
+
 
 
 
