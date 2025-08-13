@@ -46,17 +46,17 @@ Bay Zoltán Nonprofit Ltd. for Applied Research, Engineering Division (BAY-ENG),
 
 在传统意义上，填充操作需逐像素执行，因此内部迭代及各类计算需反复运行。尽管顶点映射与遍历过程看似简单，但填充性能很大程度上取决于所实现的算法及其优化程度。可以说，开发一种既充分考虑现代 CPU 硬件特性又高度优化的算法面临巨大挑战。填充模型的各组件以复杂方式相互影响，迭代逻辑的微小改动甚至可导致超过 10% 的性能差异。
 
-当前存在两种主流三角形填充算法：扫描线算法与基于半空间的算法。经典扫描线算法的核心思想是自上而下逐行（扫描线）遍历三角形。每一行代表一条线段，其起点和终点由三角形边与扫描线沿 $x$ 轴的交点确定。利用边的斜率值可通过增量方式计算线段端点。
+当前存在两种主流三角形填充算法：扫描线算法与基于半空间的算法。经典扫描线算法的核心思想是自上而下逐行（扫描线）遍历三角形。每一行代表一条线段，其起点和终点由三角形边与扫描线沿 x 轴的交点确定。利用边的斜率值可通过增量方式计算线段端点。
 
-扫描线算法虽应用广泛且可优化（如 s-buffer 技术），但难以适配现代硬件特性。其逐行光栅化模式对软硬件实现均存在多重弊端。其中一个问题是算法在 $x$ 和 $y$ 方向上不对称。对于细长三角形，水平和垂直方向的性能可能差异显著。外部扫描线循环是串行的，不利于硬件实现。负责扫描线迭代的内部循环因行长度不同而SIMD友好性不足。这导致算法具有方向依赖性。若因某些原因（如 Mipmapping, Multisampling）需同时处理多行，计算会进一步复杂化。总之，该方案难以应用于行和像素的并行处理。更好的解决方案是以2x2块（四边形）处理像素，预期将显著提升性能。
+扫描线算法虽应用广泛且可优化（如 s-buffer 技术），但难以适配现代硬件特性。其逐行光栅化模式对软硬件实现均存在多重弊端。其中一个问题是算法在 x 和 y 方向上不对称。对于细长三角形，水平和垂直方向的性能可能差异显著。外部扫描线循环是串行的，不利于硬件实现。负责扫描线迭代的内部循环因行长度不同而SIMD友好性不足。这导致算法具有方向依赖性。若因某些原因（如 Mipmapping, Multisampling）需同时处理多行，计算会进一步复杂化。总之，该方案难以应用于行和像素的并行处理。更好的解决方案是以2x2块（四边形）处理像素，预期将显著提升性能。
 
 下文将聚焦基于半空间的三角形遍历方案，阐述其基础算法及深度优化策略，这些优化可大幅提升性能。
 
 #### 4 **半空间光栅化**
 
-The name of this model is not unified in literature; some sources refer to it as a point in a triangle, a bounding box or a half-plane algorithm. The basic idea of the model originates from the polygon convexity: the interior of a convex polygon formed by  $n$  number of edges can be defined as the intersection of the  $n$  half spaces.
+该模型的名称在文献中尚未统一：部分文献称其为三角形内点判定（point in a triangle）、包围盒（bounding box）或半平面算法（half-plane algorithm）。该模型的基本思想源于多边形凸性理论：由 $n$ 条边构成的凸多边形内部区域，可定义为 $n$ 个半空间（half spaces）的交集。
 
-For triangles, the three half-planes clearly define the inner area.
+对于三角形而言，三个半空间明确定义了其内部区域。
 ![](_page_5_Figure_2.jpeg)  
 ![](_page_5_Figure_4.jpeg)
 
@@ -394,6 +394,7 @@ This research was carried out as part of the TAMOP-4.2.1.B-10/2/KONV-2010-0001 p
 [^20]: Hill, F. S. Jr.: The Pleasures of 'Perp Dot' Products. Chapter II.5 in Graphics Gems IV (Ed. P. S. Heckbert) San Diego: Academic Press, 1994, pp. 138-148
 [^21]: Mileff, P., Dudra, J.: Advanced 2D Rasterization on Modern CPUs, Applied Information Science, Engineering and Technology: Selected Topics from the Field of Production Information Engineering and IT for Manufacturing: Theory and Practice, Series: Topics in Intelligent Engineering and Informatics, Vol. 7, Chapter 5, Springer International publishing, 2014, pp. 63-79
 [^22]: Royer, P., Ituero, P., Lopez-Vallejo, M., Barrio, Carlos A. L.: Implementation Tradeoffs of Triangle Traversal Algorithms for Graphics Processing, Design of Circuits and Integrated Systems (DCIS), Madrid, Spain; November 26-28, 2014
+
 
 
 
